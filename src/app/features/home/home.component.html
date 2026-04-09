@@ -1,0 +1,58 @@
+<div class="home fade-in">
+  <section class="home__intro">
+    <span class="home__eyebrow">JSONPlaceholder API</span>
+    <h1 class="home__title">Explore dados<br><span class="home__title--accent">de forma intuitiva</span></h1>
+    <p class="home__description">
+      Visualize posts, usuários e comentários consumidos diretamente da
+      <strong>JSONPlaceholder API</strong> — uma REST API fake para prototipagem e testes.
+    </p>
+    <div class="home__actions">
+      <a routerLink="/posts" class="btn btn--primary">
+        <i class="fa-solid fa-file-lines"></i>
+        Ver Posts
+      </a>
+      <a routerLink="/users" class="btn btn--outline">
+        <i class="fa-solid fa-users"></i>
+        Ver Usuários
+      </a>
+    </div>
+  </section>
+
+  <section class="stats">
+    @for (stat of stats; track stat.label) {
+      <div class="stat-card stat-card--{{ stat.color }}">
+        <div class="stat-card__icon">
+          @if (stat.icon === 'posts') {
+            <i class="fa-solid fa-file-lines"></i>
+          }
+          @if (stat.icon === 'users') {
+            <i class="fa-solid fa-users"></i>
+          }
+          @if (stat.icon === 'comments') {
+            <i class="fa-solid fa-comments"></i>
+          }
+        </div>
+        <div class="stat-card__info">
+          <span class="stat-card__value">{{ stat.value }}</span>
+          <span class="stat-card__label">{{ stat.label }}</span>
+        </div>
+      </div>
+    }
+  </section>
+
+  <section class="features">
+    <h2 class="features__title">O que você pode explorar</h2>
+    <div class="features__grid">
+      @for (feature of features; track feature.title) {
+        <div class="feature-card feature-card--{{ feature.color }}">
+          <h3 class="feature-card__title">{{ feature.title }}</h3>
+          <p class="feature-card__description">{{ feature.description }}</p>
+          <a [routerLink]="feature.route" class="feature-card__link">
+            {{ feature.label }}
+            <i class="fa-solid fa-arrow-right"></i>
+          </a>
+        </div>
+      }
+    </div>
+  </section>
+</div>

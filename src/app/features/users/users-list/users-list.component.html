@@ -1,0 +1,78 @@
+<div class="users-list fade-in">
+  <div class="page-header">
+    <h1 class="page-header__title">Usuários</h1>
+    <p class="page-header__subtitle">{{ users().length }} usuários cadastrados na API</p>
+  </div>
+
+  @if (loading()) {
+    <app-loading-spinner message="Carregando usuários..." />
+  } @else if (error()) {
+    <div class="error-state">
+      <p>{{ error() }}</p>
+    </div>
+  } @else {
+    <div class="toolbar">
+      <div class="search-bar">
+        <i class="fa-solid fa-magnifying-glass search-bar__icon"></i>
+        <input
+          class="search-bar__input"
+          type="text"
+          placeholder="Pesquisar por nome, email ou empresa..."
+          [value]="searchQuery()"
+          (input)="onSearch($event)"
+        />
+      </div>
+      <span class="toolbar__count">
+        {{ filteredUsers().length }} resultado{{ filteredUsers().length !== 1 ? 's' : '' }}
+      </span>
+    </div>
+
+    @if (filteredUsers().length === 0) {
+      <div class="empty-state">
+        <p>Nenhum usuário encontrado para "<strong>{{ searchQuery() }}</strong>"</p>
+      </div>
+    } @else {
+      <div class="users-grid">
+        @for (user of filteredUsers(); track user.id) {
+          <a [routerLink]="['/users', user.id]" class="user-card">
+            <div class="user-card__header">
+              <div class="avatar avatar--lg" [style.background]="getAvatarColor(user.id)">
+                {{ getInitials(user.name) }}
+              </div>
+              <div class="user-card__badge">
+                <span class="badge badge--neutral">#{{ user.id }}</span>
+              </div>
+            </div>
+
+            <div class="user-card__body">
+              <h3 class="user-card__name">{{ user.name }}</h3>
+              <p class="user-card__username">&#64;{{ user.username }}</p>
+            </div>
+
+            <div class="user-card__details">
+              <div class="user-card__detail">
+                <i class="fa-solid fa-envelope"></i>
+                <span>{{ user.email }}</span>
+              </div>
+              <div class="user-card__detail">
+                <i class="fa-solid fa-briefcase"></i>
+                <span>{{ user.company.name }}</span>
+              </div>
+              <div class="user-card__detail">
+                <i class="fa-solid fa-location-dot"></i>
+                <span>{{ user.address.city }}</span>
+              </div>
+            </div>
+
+            <div class="user-card__footer">
+              <span class="user-card__cta">
+                Ver perfil
+                <i class="fa-solid fa-arrow-right"></i>
+              </span>
+            </div>
+          </a>
+        }
+      </div>
+    }
+  }
+</div>

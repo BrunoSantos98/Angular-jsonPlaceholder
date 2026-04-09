@@ -1,0 +1,102 @@
+<div class="post-detail fade-in">
+  <nav class="breadcrumb">
+    <a routerLink="/posts" class="breadcrumb__link">Posts</a>
+    <i class="fa-solid fa-chevron-right"></i>
+    @if (post()) {
+      <span class="breadcrumb__current">Post #{{ post()!.id }}</span>
+    }
+  </nav>
+
+  @if (loading()) {
+    <app-loading-spinner message="Carregando post..." />
+  } @else if (error()) {
+    <div class="error-state">
+      <p>{{ error() }}</p>
+      <a routerLink="/posts" class="btn btn--outline">Voltar aos Posts</a>
+    </div>
+  } @else if (post()) {
+    <div class="post-layout">
+      <div class="post-main">
+        <article class="post-article card">
+          <div class="post-article__badge">
+            <span class="badge badge--primary">Post #{{ post()!.id }}</span>
+          </div>
+          <h1 class="post-article__title">{{ post()!.title }}</h1>
+          <div class="post-article__divider"></div>
+          <p class="post-article__body">{{ post()!.body }}</p>
+        </article>
+
+        <section class="comments-section">
+          <button class="comments-toggle" (click)="toggleComments()">
+            <div class="comments-toggle__left">
+              <i class="fa-solid fa-comments"></i>
+              <span>Comentários</span>
+              <span class="badge badge--primary">{{ comments().length }}</span>
+            </div>
+            <i class="fa-solid fa-chevron-down comments-toggle__chevron" [class.rotated]="commentsExpanded()"></i>
+          </button>
+
+          @if (commentsExpanded()) {
+            <div class="comments-list">
+              @for (comment of comments(); track comment.id) {
+                <div class="comment-card">
+                  <div class="comment-card__avatar avatar avatar--sm"
+                       style="background: var(--primary-500)">
+                    {{ getCommentInitials(comment.name) }}
+                  </div>
+                  <div class="comment-card__content">
+                    <div class="comment-card__header">
+                      <span class="comment-card__name">{{ comment.name }}</span>
+                      <span class="comment-card__email">{{ comment.email }}</span>
+                    </div>
+                    <p class="comment-card__body">{{ comment.body }}</p>
+                  </div>
+                </div>
+              }
+            </div>
+          }
+        </section>
+      </div>
+
+      <aside class="post-sidebar">
+        @if (user()) {
+          <div class="author-card card">
+            <h3 class="author-card__heading">Autor</h3>
+            <div class="author-card__avatar-row">
+              <div class="avatar avatar--lg" [style.background]="avatarColor()">
+                {{ userInitials() }}
+              </div>
+              <div>
+                <p class="author-card__name">{{ user()?.name }}</p>
+                <p class="author-card__username">&#64;{{ user()?.username }}</p>
+              </div>
+            </div>
+            <div class="author-card__divider"></div>
+            <div class="author-card__info">
+              <div class="info-row">
+                <i class="fa-solid fa-envelope"></i>
+                <span>{{ user()?.email }}</span>
+              </div>
+              <div class="info-row">
+                <i class="fa-solid fa-house"></i>
+                <span>{{ user()?.address?.city }}</span>
+              </div>
+              <div class="info-row">
+                <i class="fa-solid fa-briefcase"></i>
+                <span>{{ user()?.company?.name }}</span>
+              </div>
+            </div>
+            <a [routerLink]="['/users', user()?.id]" class="btn btn--outline btn--sm author-card__link">
+              Ver perfil completo
+            </a>
+          </div>
+        }
+
+        <a routerLink="/posts" class="btn btn--ghost btn--sm back-btn">
+          <i class="fa-solid fa-arrow-left"></i>
+          Voltar aos Posts
+        </a>
+      </aside>
+    </div>
+  }
+</div>

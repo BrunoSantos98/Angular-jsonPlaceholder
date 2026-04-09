@@ -1,0 +1,134 @@
+<div class="user-detail fade-in">
+  <nav class="breadcrumb">
+    <a routerLink="/users" class="breadcrumb__link">Usuários</a>
+    <i class="fa-solid fa-chevron-right"></i>
+    @if (user()) {
+      <span class="breadcrumb__current">{{ user()!.name }}</span>
+    }
+  </nav>
+
+  @if (loading()) {
+    <app-loading-spinner message="Carregando usuário..." />
+  } @else if (error()) {
+    <div class="error-state">
+      <p>{{ error() }}</p>
+      <a routerLink="/users" class="btn btn--outline">Voltar aos Usuários</a>
+    </div>
+  } @else if (user()) {
+    <div class="profile-header card">
+      <div class="profile-header__avatar-col">
+        <div class="avatar avatar--xl" [style.background]="avatarColor()">
+          {{ userInitials() }}
+        </div>
+      </div>
+      <div class="profile-header__info">
+        <h1 class="profile-header__name">{{ user()!.name }}</h1>
+        <p class="profile-header__username">&#64;{{ user()!.username }}</p>
+        <div class="profile-header__tags">
+          <span class="badge badge--primary">{{ user()!.company.name }}</span>
+          <span class="badge badge--neutral">{{ user()!.address.city }}</span>
+          <span class="badge badge--info">{{ posts().length }} posts</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="detail-layout">
+      <div class="detail-left">
+        <div class="info-card card">
+          <h3 class="info-card__title">
+            <i class="fa-solid fa-envelope"></i>
+            Contato
+          </h3>
+          <div class="info-card__rows">
+            <div class="detail-row">
+              <span class="detail-row__label">Email</span>
+              <span class="detail-row__value">{{ user()!.email }}</span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-row__label">Telefone</span>
+              <span class="detail-row__value">{{ user()!.phone }}</span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-row__label">Website</span>
+              <span class="detail-row__value detail-row__value--link">{{ user()!.website }}</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="info-card card">
+          <h3 class="info-card__title">
+            <i class="fa-solid fa-location-dot"></i>
+            Endereço
+          </h3>
+          <div class="info-card__rows">
+            <div class="detail-row">
+              <span class="detail-row__label">Rua</span>
+              <span class="detail-row__value">{{ user()!.address.street }}, {{ user()!.address.suite }}</span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-row__label">Cidade</span>
+              <span class="detail-row__value">{{ user()!.address.city }}</span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-row__label">CEP</span>
+              <span class="detail-row__value">{{ user()!.address.zipcode }}</span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-row__label">Coords</span>
+              <span class="detail-row__value">{{ user()!.address.geo.lat }}, {{ user()!.address.geo.lng }}</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="info-card card">
+          <h3 class="info-card__title">
+            <i class="fa-solid fa-briefcase"></i>
+            Empresa
+          </h3>
+          <div class="info-card__rows">
+            <div class="detail-row">
+              <span class="detail-row__label">Nome</span>
+              <span class="detail-row__value">{{ user()!.company.name }}</span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-row__label">Slogan</span>
+              <span class="detail-row__value detail-row__value--italic">{{ user()!.company.catchPhrase }}</span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-row__label">Área</span>
+              <span class="detail-row__value">{{ user()!.company.bs }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="detail-right">
+        <div class="posts-section">
+          <h3 class="posts-section__title">
+            Posts de {{ user()!.name.split(' ')[0] }}
+            <span class="badge badge--primary">{{ posts().length }}</span>
+          </h3>
+
+          @if (posts().length === 0) {
+            <div class="empty-state">
+              <p>Nenhum post encontrado.</p>
+            </div>
+          } @else {
+            <div class="posts-list">
+              @for (post of posts(); track post.id) {
+                <a [routerLink]="['/posts', post.id]" class="mini-post-card">
+                  <div class="mini-post-card__top">
+                    <span class="mini-post-card__id">#{{ post.id }}</span>
+                    <i class="fa-solid fa-arrow-right mini-post-card__arrow"></i>
+                  </div>
+                  <h4 class="mini-post-card__title">{{ post.title }}</h4>
+                  <p class="mini-post-card__body">{{ post.body }}</p>
+                </a>
+              }
+            </div>
+          }
+        </div>
+      </div>
+    </div>
+  }
+</div>
